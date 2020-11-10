@@ -31,7 +31,7 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 		return nil, err
 	}
 
-	content := prependTags(note.Tags, string(html))
+	content := appendTags(note.Tags, string(html))
 	content = prependTitle(note.Title, content)
 
 	var b bytes.Buffer
@@ -85,12 +85,12 @@ func mapResources(note *enex.Note, md markdown.Note) error {
 	return nil
 }
 
-func prependTags(tags []string, content string) string {
+func appendTags(tags []string, content string) string {
 	var tt []string
 	for _, t := range tags {
-		tt = append(tt, fmt.Sprintf("<code>%s</code>", t))
+		tt = append(tt, fmt.Sprintf("@%s<br>", t))
 	}
-	return strings.Join(tt, " ") + "<br>" + content
+	return content + strings.Join(tt, " ")
 }
 
 func prependTitle(title, content string) string {
